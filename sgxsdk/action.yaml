@@ -6,7 +6,7 @@ runs:
   steps:
     - name: Install SGX SDK
       shell: bash
-      # In order to propagate teh environment variables to subsequent steps we
+      # In order to propagate the environment variables to subsequent steps we
       # need to redirect through $GITHUB_ENV, see
       # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-environment-variable
       # We can't do `cat /opt/intel/sgxsdk/environment >> $GITHUB_ENV` because
