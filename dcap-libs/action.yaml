@@ -1,5 +1,10 @@
 name: Install DCAP libraries
 description: Installs the DCAP libraries into the environment
+inputs: 
+  version:
+    description: "The version of the DCAP libs to install"
+    required: false
+    default: ""
 
 runs:
   using: composite
@@ -7,8 +12,10 @@ runs:
     - name: Installing DCAP libraries
       shell: bash
       run:
+        DCAP_VERSION=${{ inputs.version }}
         source /etc/lsb-release &&
         echo "deb [arch=amd64] https://download.01.org/intel-sgx/sgx_repo/ubuntu $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/intel-sgx.list &&
         wget -qO - https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | sudo apt-key add - &&
         sudo apt-get update &&
-        sudo apt-get install -y libsgx-dcap-ql-dev libsgx-dcap-quote-verify-dev
+        sudo apt-get install -y libsgx-dcap-ql${DCAP_VERSION:+"=${DCAP_VERSION}"} libsgx-dcap-ql-dev${DCAP_VERSION:+"=${DCAP_VERSION}"} &&
+        sudo apt-get install -y libsgx-dcap-quote-verify${DCAP_VERSION:+"=${DCAP_VERSION}"} libsgx-dcap-quote-verify-dev${DCAP_VERSION:+"=${DCAP_VERSION}"}
