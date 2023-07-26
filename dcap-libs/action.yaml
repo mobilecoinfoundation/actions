@@ -12,11 +12,18 @@ runs:
     - name: Installing DCAP libraries
       shell: bash
       run:
-        DCAP_VERSION=${{ inputs.version }}
+        DCAP_VERSION=${{ inputs.version }} &&
         source /etc/lsb-release &&
         sudo mkdir -p /etc/apt/keyrings &&
         wget -qO - https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | gpg --dearmor | sudo tee /etc/apt/keyrings/intel-sgx.gpg > /dev/null &&
         echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/intel-sgx.gpg] https://download.01.org/intel-sgx/sgx_repo/ubuntu $DISTRIB_CODENAME main" | sudo tee /etc/apt/sources.list.d/intel-sgx.list
         sudo apt-get update &&
-        sudo apt-get install -y libsgx-dcap-ql${DCAP_VERSION:+"=${DCAP_VERSION}"} libsgx-dcap-ql-dev${DCAP_VERSION:+"=${DCAP_VERSION}"} &&
-        sudo apt-get install -y libsgx-dcap-quote-verify${DCAP_VERSION:+"=${DCAP_VERSION}"} libsgx-dcap-quote-verify-dev${DCAP_VERSION:+"=${DCAP_VERSION}"}
+        sudo apt-get install -y libsgx-dcap-ql${DCAP_VERSION:+"=${DCAP_VERSION}"} 
+                                libsgx-dcap-ql-dev${DCAP_VERSION:+"=${DCAP_VERSION}"} 
+                                libsgx-dcap-quote-verify${DCAP_VERSION:+"=${DCAP_VERSION}"} 
+                                libsgx-dcap-quote-verify-dev${DCAP_VERSION:+"=${DCAP_VERSION}"} 
+                                libsgx-ae-id-enclave${DCAP_VERSION:+"=${DCAP_VERSION}"} 
+                                libsgx-ae-qe3${DCAP_VERSION:+"=${DCAP_VERSION}"} 
+                                libsgx-ae-qve${DCAP_VERSION:+"=${DCAP_VERSION}"} 
+                                libsgx-qe3-logic${DCAP_VERSION:+"=${DCAP_VERSION}"} 
+                                libsgx-pce-logic${DCAP_VERSION:+"=${DCAP_VERSION}"} 
