@@ -1,0 +1,50 @@
+name: SGX SDK action
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - sgxsdk/**
+      - .github/workflows/sgxsdk.yaml
+  pull_request:
+    paths:
+      - sgxsdk/**
+      - .github/workflows/sgxsdk.yaml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  install:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-24.04
+            version: 2.25.100.3
+            release: ""
+          - runner: ubuntu-22.04
+            version: 2.30.101.1
+            release: 2.30.1
+          - runner: ubuntu-24.04
+            version: 2.30.101.1
+            release: 2.30.1
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./sgxsdk
+        with:
+          version: ${{ matrix.version }}
+          release: ${{ matrix.release }}
+      - name: Check SDK installation and exported environment
+        env:
+          SDK_VERSION: ${{ matrix.version }}
+        run: |
+          test "$SGX_SDK" = /opt/intel/sgxsdk
+          test "$(pkg-config --modversion libsgx_urts)" = "$SDK_VERSION"
+          command -v sgx_sign
+          command -v sgx_edger8r
+          [[ "$PATH" == *"$SGX_SDK/bin/x64"* ]]
+          [[ "$PKG_CONFIG_PATH" == *"$SGX_SDK/pkgconfig"* ]]
+          [[ "$LD_LIBRARY_PATH" == *"$SGX_SDK/sdk_libs"* ]]
